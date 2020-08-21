@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lz.easycode.dao.DeptDao">
+
+    <resultMap id="BaseResultMap" type="com.lz.easycode.entity.Dept">
+        <!--@Table dept-->
+        <result property="deptno" column="deptno" jdbcType="INTEGER"/>
+        <result property="dname" column="dname" jdbcType="VARCHAR"/>
+        <result property="loc" column="loc" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="BaseResultMap">
+        select
+          deptno, dname, loc
+        from mldn.dept
+        where deptno = #{deptno}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="BaseResultMap">
+        select
+          deptno, dname, loc
+        from mldn.dept
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="BaseResultMap">
+        select
+          deptno, dname, loc
+        from mldn.dept
+        <where>
+            <if test="deptno != null">
+                and deptno = #{deptno}
+            </if>
+            <if test="dname != null and dname != ''">
+                and dname = #{dname}
+            </if>
+            <if test="loc != null and loc != ''">
+                and loc = #{loc}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="deptno" useGeneratedKeys="true">
+        insert into mldn.dept(dname, loc)
+        values (#{dname}, #{loc})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update mldn.dept
+        <set>
+            <if test="dname != null and dname != ''">
+                dname = #{dname},
+            </if>
+            <if test="loc != null and loc != ''">
+                loc = #{loc},
+            </if>
+        </set>
+        where deptno = #{deptno}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from mldn.dept where deptno = #{deptno}
+    </delete>
+
+</mapper>
